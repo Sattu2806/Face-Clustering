@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Clustify</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --background: #ffffff; /* White Background */
+            --foreground: #000000; /* Dark Ruby Text */
+            --card: #fff5f5; /* Light Ruby Card Background */
+            --card-foreground: #330000; /* Dark Ruby Card Text */
+            --popover: #fff5f5; /* Light    Ruby Popover Background */
+            --popover-foreground: #330000; /* Dark Ruby Popover Text */
+            --primary: #2196F3; /* Ruby Red */
+            --primary-temp: #000000; /* Ruby Red */
+            --primary-foreground: #ffffff; /* White Text on Ruby Background */
+            --secondary: #ffebee; /* Very Light Ruby */
+            --secondary-foreground: #d50032; /* Dark Ruby Text */
+            --muted: #fbe9e7; /* Muted Ruby */
+            --muted-foreground: #4f4f4f; /* Dark Muted Ruby */
+            --accent: #d50032; /* Ruby Accent */
+            --accent-foreground: #ffffff; /* White Accent Text */
+            --destructive: #ffffff; /* Red (Destructive) */
+            --destructive-foreground: #ffffff; /* White Destructive Text */
+            --border: #f8bbd0; /* Light Ruby Border */
+            --input: #ffebee; /* Very Light Ruby Input */
+            --ring: #d50032; /* Ruby Ring */
+            --chart-1: #e57373; /* Ruby Chart Color 1 */
+            --chart-2: #f06292; /* Ruby Chart Color 2 */
+            --chart-3: #ec407a; /* Ruby Chart Color 3 */
+            --chart-4: #d81b60; /* Ruby Chart Color 4 */
+            --chart-5: #c2185b; /* Ruby Chart Color 5 */
+            --new: #4caf50;
+            --new-temp: #38a169;
+            --radius: 0.5rem;
+        }
+
+        img[src="/placeholder.svg"],
+        img[src="/placeholder-user.jpg"] {
+            filter: sepia(.3) hue-rotate(-60deg) saturate(.5) opacity(0.8);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Inter', sans-serif;
+            --font-sans-serif: 'Inter';
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            --font-sans-serif: 'Inter';
+            background-color: var(--background); /* White Background for Body */
+        }
+
+        .bg-background {
+            background-color: var(--background);
+        }
+
+        .text-foreground {
+            color: var(--foreground);
+        }
+
+        .bg-primary {
+            background-color: var(--new);
+        }
+
+        .bg-primary-temp {
+            background-color: var(--new-temp);
+        }
+
+        .text-primary-foreground {
+            color: var(--primary-foreground);
+        }
+
+        .text-primary-temp {
+            color: var(--primary-temp);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-new {
+            color: var(--new);
+        }
+
+        .bg-secondary {
+            background-color: var(--secondary);
+        }
+
+        .text-secondary-foreground {
+            color: var(--secondary-foreground);
+        }
+
+        .bg-muted {
+            background-color: var(--muted);
+        }
+
+        .text-muted-foreground {
+            color: var(--muted-foreground);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .text-accent-foreground {
+            color: var(--accent-foreground);
+        }
+
+        .bg-destructive {
+            background-color: var(--destructive);
+        }
+
+        .text-destructive-foreground {
+            color: var(--destructive-foreground);
+        }
+        .start-button {
+            background-color: #4caf50;
+        }
+
+        .start-button:hover {
+            background-color: #38a169;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-md text-center mt-4">
+        <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Face Clustering Made Simple</h1>
+        <p class="mt-4 text-muted-foreground">Unlock the power of face clustering with our easy-to-use web app.</p>
+        <div class="mt-8">
+            <form action="{{ url_for('home') }}" method="get">
+                <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary-temp/90 h-11 rounded-md px-4 w-60", name="start">
+                    Start
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="mx-auto mt-12 max-w-md space-y-6">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-primary">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <h3 class="mt-2 text-lg text-primary-temp font-medium">Select Images</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Choose the images you want to process.</p>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-primary">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" x2="12" y1="3" y2="15"></line>
+                </svg>
+                <h3 class="mt-2 text-lg text-primary-temp font-medium">Upload</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Upload the selected images.</p>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-primary">
+                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+                <h3 class="mt-2 text-lg text-primary-temp font-medium">Proceed</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Click the 'Proceed' button and wait for the results.</p>
+            </div>
+        </div>
+        <div class="text-center text-sm text-muted-foreground mt-4">
+            Sit back and let our powerful algorithms do the work.
+        </div>
+    </div>
+</body>
+
+</html>

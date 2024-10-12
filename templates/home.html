@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clustify</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .home-button {
+            background-color: #f44336;
+            position: fixed;
+            max-width: 80px;
+            top: 40px;
+            right: 30px;
+            border-radius: 5px;
+            border: none;
+            flex: 1;
+            font-size: 12px;
+            box-sizing: border-box;
+            z-index: 10; /* Ensure it’s above other content */
+        }
+        
+        .home-button:hover {
+            background-color: #e53935;
+        }
+        /* Add some basic styling for the loader */
+        #loader {
+            display: none;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <form action="{{ url_for('clear_database') }}" method="post">
+            <button type="submit" name="home" class="button home-button">Home</button>
+        </form>
+    </div>
+    <div class="container">
+        <h1>Upload Images</h1>
+        <form id="upload-form" method="POST" enctype="multipart/form-data">
+            <label class="file-label">Select files...</label>
+            <input type="file" name="files[]" multiple>
+            <button class="upload-button" type="submit" name="upload">Upload</button>
+        </form>
+        <form id="proceed-form" method="POST">
+            <button class="proceed-button" type="submit" name="proceed">Proceed to Processing</button>
+        </form>
+        <div id="loader"></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        let processingInProgress = false;
+
+        document.getElementById('proceed-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            processingInProgress = true;
+            document.getElementById('loader').style.display = 'block'; // Show the loader
+
+            fetch("{{ url_for('process_and_redirect') }}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                })
+                .catch(error => console.error('Error:', error))
+                .finally(() => {
+                    processingInProgress = false;
+                    document.getElementById('loader').style.display = 'none'; // Hide the loader if processing is complete
+                });
+        });
+
+        document.getElementById('home-form').addEventListener('submit', function(event) {
+            if (processingInProgress) {
+                // If processing is in progress, hide the loader and allow navigation
+                document.getElementById('loader').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

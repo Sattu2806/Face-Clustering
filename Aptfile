@@ -1,0 +1,3 @@
+libopencv-dev
+libboost-python-dev
+cmake
